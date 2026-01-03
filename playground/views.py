@@ -6,6 +6,6 @@ from store.models import Product
 
 
 def say_hello(request):
-    query_set = Product.objects.count()
+    exists = Product.objects.filter(pk=0).exists()
 
     return render(request, 'hello.html', {"name": "I Nyoman Warsana"})
