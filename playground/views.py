@@ -1,13 +1,12 @@
 from django.shortcuts import render
-from django.db.models.aggregates import Count, Min
-from store.models import Product
+from django.db.models import Value, F
+from store.models import Product, Customer
 
 # Create your views here.
 
 
 def say_hello(request):
 
-    result = Product.objects.filter(collection__id=1).aggregate(
-        count=Count('id'), min_price=Min('unit_price'))
+    queryset = Customer.objects.annotate(new_id=F('id') + 1)
 
-    return render(request, 'hello.html', {"name": "I Nyoman Warsana", "result": result})
+    return render(request, 'hello.html', {"name": "I Nyoman Warsana", "result": list(queryset)})
