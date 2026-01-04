@@ -12,7 +12,8 @@ from store.models import OrderItem
 
 def say_hello(request):
 
-    queryset = Product.objects.filter(inventory=F('unit_price'))
+    product = Product.objects.order_by("unit_price")[0]
+    product = Product.objects.latest("unit_price")
 
     customer_queryset = Customer.objects.filter(email__icontains='.com')
 
@@ -25,4 +26,4 @@ def say_hello(request):
 
     orderItem_queryset = OrderItem.objects.filter(product__collection__id=3)
 
-    return render(request, 'hello.html', {"name": "I Nyoman Warsana", "products": list(queryset)})
+    return render(request, 'hello.html', {"name": "I Nyoman Warsana", "product": product})
