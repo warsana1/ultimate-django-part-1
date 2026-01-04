@@ -1,31 +1,13 @@
 from django.shortcuts import render
-from django.http import HttpResponse
-from django.db.models import Q, F
+from django.db.models.aggregates import Count, Min
 from store.models import Product
-from store.models import Customer
-from store.models import Collection
-from store.models import Order
-from store.models import OrderItem
 
 # Create your views here.
 
 
 def say_hello(request):
 
-    queryset = Order.objects.select_related(
-        'customer').prefetch_related('orderitem_set__product').order_by('-placed_at')[:5]
+    result = Product.objects.filter(collection__id=1).aggregate(
+        count=Count('id'), min_price=Min('unit_price'))
 
-    product = Product.objects.latest("unit_price")
-
-    customer_queryset = Customer.objects.filter(email__icontains='.com')
-
-    collection_queryset = Collection.objects.filter(
-        featured_product__isnull=True)
-
-    product_queryset = Product.objects.filter(inventory__lt=10)
-
-    order_queryset = Order.objects.filter(customer_id=1)
-
-    orderItem_queryset = OrderItem.objects.filter(product__collection__id=3)
-
-    return render(request, 'hello.html', {"name": "I Nyoman Warsana", "orders": list(queryset)})
+    return render(request, 'hello.html', {"name": "I Nyoman Warsana", "result": result})
