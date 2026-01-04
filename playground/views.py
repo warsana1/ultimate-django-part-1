@@ -12,7 +12,8 @@ from store.models import OrderItem
 
 def say_hello(request):
 
-    queryset = Product.objects.defer('description')
+    queryset = Order.objects.select_related(
+        'customer').prefetch_related('orderitem_set__product').order_by('-placed_at')[:5]
 
     product = Product.objects.latest("unit_price")
 
@@ -27,4 +28,4 @@ def say_hello(request):
 
     orderItem_queryset = OrderItem.objects.filter(product__collection__id=3)
 
-    return render(request, 'hello.html', {"name": "I Nyoman Warsana", "products": list(queryset)})
+    return render(request, 'hello.html', {"name": "I Nyoman Warsana", "orders": list(queryset)})
