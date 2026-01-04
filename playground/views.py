@@ -12,8 +12,7 @@ from store.models import OrderItem
 
 def say_hello(request):
 
-    queryset = Product.objects.filter(
-        id__in=OrderItem.objects.values("product_id").distinct()).order_by("title")
+    queryset = Product.objects.defer('description')
 
     product = Product.objects.latest("unit_price")
 
