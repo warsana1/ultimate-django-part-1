@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.db.models import Q
 from store.models import Product
 from store.models import Customer
 from store.models import Collection
@@ -10,6 +11,10 @@ from store.models import OrderItem
 
 
 def say_hello(request):
+
+    queryset = Product.objects.filter(
+        Q(inventory__lt=10) | Q(unit_price__lt=20))
+
     customer_queryset = Customer.objects.filter(email__icontains='.com')
 
     collection_queryset = Collection.objects.filter(
@@ -21,4 +26,4 @@ def say_hello(request):
 
     orderItem_queryset = OrderItem.objects.filter(product__collection__id=3)
 
-    return render(request, 'hello.html', {"name": "I Nyoman Warsana", "customers": list(customer_queryset)})
+    return render(request, 'hello.html', {"name": "I Nyoman Warsana", "products": list(queryset)})
