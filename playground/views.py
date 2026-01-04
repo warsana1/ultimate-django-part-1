@@ -12,7 +12,9 @@ from store.models import OrderItem
 
 def say_hello(request):
 
-    queryset = Product.objects.all()[:5]
+    queryset = Product.objects.filter(
+        id__in=OrderItem.objects.values("product_id").distinct()).order_by("title")
+
     product = Product.objects.latest("unit_price")
 
     customer_queryset = Customer.objects.filter(email__icontains='.com')
