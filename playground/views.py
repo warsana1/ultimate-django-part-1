@@ -6,6 +6,9 @@ from tags.models import TaggedItem
 
 
 def say_hello(request):
-    Collection.objects.filter(pk=11).update(featured_product=None)
+    collection = Collection(pk=11)
+    collection.delete()
+
+    Collection.objects.filter(id__gt=5).delete()
 
     return render(request, 'hello.html', {"name": "I Nyoman Warsana", })
